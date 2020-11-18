@@ -87,6 +87,7 @@ public class BombermanGame extends Application {
         AnimationTimer timer = new AnimationTimer() {
             @Override
             public void handle(long l) {
+
                 update();
                 renderEntities();
 
@@ -132,6 +133,10 @@ public class BombermanGame extends Application {
                     object = new Brick(j,i,Sprite.brick.getFxImage());
                     bricks.add(object);
                 }
+                else if(contentFileLever1[i][j] == '1'){
+                    object = new Balloom(j,i, Sprite.balloom_right1.getFxImage());
+                    ballooms.add(object);
+                }
 
             }
         }
@@ -142,11 +147,16 @@ public class BombermanGame extends Application {
     public void update(){
         walls.forEach(Entity::update);
         bomberman.update();
+        ballooms.forEach(Entity::update);
     }
 
     public void renderEntities() {
         gc.clearRect(bomberman.getX()-2, bomberman.getY()-3, 32, 39);
         bomberman.render(gc);
+        for(Entity eBalloom: ballooms){
+            gc.clearRect(eBalloom.getX()-2 , eBalloom.getY()-3,37,39);
+        }
+        ballooms.forEach(g -> g.render(gc));
         bricks.forEach(g -> g.render(gc));
         walls.forEach(g -> g.render(gc));
     }

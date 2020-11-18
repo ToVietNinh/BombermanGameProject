@@ -46,6 +46,7 @@ public class Bomber extends Entity {
             bomberman.setX(positionX);
             bomberman.setImg(Sprite.movingSprite(Sprite.player_right, Sprite.player_right_1, Sprite.player_right_2, animate, timeTransfer).getFxImage());
         }
+
         if (goUp) {
             positionY -= velocity;
             if (checkCollision()) {
