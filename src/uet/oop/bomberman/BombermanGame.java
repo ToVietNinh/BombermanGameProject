@@ -29,8 +29,10 @@ public class BombermanGame extends Application {
     public static List<Entity> walls = new ArrayList<>();
     public static List<Entity> bricks = new ArrayList<>();
     public static List<Entity> ballooms = new ArrayList<>();
+    public static List<Entity> oneals = new ArrayList<>();
+    public static List<Entity> bomb_items = new ArrayList<>();
     public static Entity bomberman;
-    public static boolean goUp, goDown, goLeft, goRight;
+    public static boolean goUp, goDown, goLeft, goRight,space,isMoving;
     public static int positionX, positionY;
     public char [][] contentFileLever1 = new char[14][32];
 
@@ -58,10 +60,11 @@ public class BombermanGame extends Application {
                     @Override
                     public void handle(KeyEvent event) {
                         switch (event.getCode()){
-                            case UP: goUp = true;break;
-                            case DOWN: goDown = true;break;
-                            case LEFT: goLeft = true;break;
-                            case RIGHT: goRight = true;break;
+                            case UP: goUp = true;isMoving=true;break;
+                            case DOWN: goDown = true;isMoving=true;break;
+                            case LEFT: goLeft = true;isMoving=true;break;
+                            case RIGHT: goRight = true;isMoving=true;break;
+                            case SPACE: space = true; break;
                         }
                     }
                 }
@@ -71,10 +74,11 @@ public class BombermanGame extends Application {
                     @Override
                     public void handle(KeyEvent event) {
                         switch (event.getCode()){
-                            case UP: goUp = false;break;
-                            case DOWN: goDown = false;break;
-                            case LEFT: goLeft = false;break;
-                            case RIGHT: goRight = false;break;
+                            case UP: goUp = false;isMoving=false;break;
+                            case DOWN: goDown = false;isMoving=false;break;
+                            case LEFT: goLeft = false;isMoving=false;break;
+                            case RIGHT: goRight = false;isMoving=false;break;
+                            case SPACE: space = false; break;
                         }
                     }
                 }
@@ -137,6 +141,10 @@ public class BombermanGame extends Application {
                     object = new Balloom(j,i, Sprite.balloom_right1.getFxImage());
                     ballooms.add(object);
                 }
+                else if(contentFileLever1[i][j] == '2'){
+                    object = new Oneal(j,i,Sprite.oneal_right1.getFxImage());
+                    oneals.add(object);
+                }
 
             }
         }
@@ -148,17 +156,22 @@ public class BombermanGame extends Application {
         walls.forEach(Entity::update);
         bomberman.update();
         ballooms.forEach(Entity::update);
+        oneals.forEach(Entity::update);
+        bomb_items.forEach(Entity::update);
     }
 
     public void renderEntities() {
-        gc.clearRect(bomberman.getX()-2, bomberman.getY()-3, 32, 39);
+        //gc.clearRect(bomberman.getX()-2, bomberman.getY()-3, 32, 39);
+        gc.clearRect(0,0,canvas.getWidth(),canvas.getHeight());
         bomberman.render(gc);
-        for(Entity eBalloom: ballooms){
+        /*for(Entity eBalloom: ballooms){
             gc.clearRect(eBalloom.getX()-2 , eBalloom.getY()-3,37,39);
-        }
+        }*/
         ballooms.forEach(g -> g.render(gc));
+        oneals.forEach(g -> g.render(gc));
         bricks.forEach(g -> g.render(gc));
         walls.forEach(g -> g.render(gc));
+        bomb_items.forEach(g -> g.render(gc));
     }
 
     public void renderStillObject(){

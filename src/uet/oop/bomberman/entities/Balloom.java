@@ -10,16 +10,18 @@ import static uet.oop.bomberman.BombermanGame.positionY;
 
 public class Balloom extends Entity {
 
-    public int checkPosOfBalloomX[] = {3, Sprite.SCALED_SIZE - 1, 3, Sprite.SCALED_SIZE - 1};
-    public int checkPosOfBalloomY[] = {2, 2, Sprite.SCALED_SIZE - 3, Sprite.SCALED_SIZE - 3};
+    public int checkPosOfBalloomX[] = {5, Sprite.SCALED_SIZE - 5, 5, Sprite.SCALED_SIZE - 5};
+    public int checkPosOfBalloomY[] = {5, 5, Sprite.SCALED_SIZE - 5, Sprite.SCALED_SIZE - 5};
 
     public Balloom(int x, int y, Image img) {
         super(x, y, img);
     }
 
-    public final int velocityOfBalloom = 3;
+    public final int velocityOfBalloom = 1;
 
-    private int timeTransferOfBalloom = 26;
+    private int timeTransferOfBalloom = 60;
+
+    protected int tempX = this.getX(), tempY = this.getY();
 
     protected int direction;
 
@@ -34,50 +36,67 @@ public class Balloom extends Entity {
     @Override
     public void update() {
         animate();
-        Random random = new Random();
-        direction = random.nextInt(20);
+        move();
+    }
+
+    public void move(){
         // -- 0:right - 1:left - 2:up - 3:down -- //
         int count = 0;
         switch (direction) {
-            case 0: case 1: case 2: case 3: case 4:
+            case 0:
             {
-                this.x += velocityOfBalloom;
-                if (checkCollisionOfBalloom()) {
-                    this.x -= velocityOfBalloom;
+                tempX += velocityOfBalloom;
+                if(checkCollisionOfBalloom()){
+                    tempX -= velocityOfBalloom;
+                    Random random = new Random();
+                    setDirection(random.nextInt(4));
                 }
+                setX(tempX);
                 setImg(Sprite.movingSprite(Sprite.balloom_right1, Sprite.balloom_right2, Sprite.balloom_right3, animate, timeTransferOfBalloom).getFxImage());
                 break;
             }
-            case 5: case 6: case 7: case 8: case 9:
-                this.x -= velocityOfBalloom;
-                if (checkCollisionOfBalloom()) {
-                    this.x += velocityOfBalloom;
+            case 1:
+
+                tempX -= velocityOfBalloom;
+                if(checkCollisionOfBalloom()){
+                    tempX += velocityOfBalloom;
+                    Random random = new Random();
+                    setDirection(random.nextInt(4));
                 }
+                setX(tempX);
                 setImg(Sprite.movingSprite(Sprite.balloom_left1, Sprite.balloom_left2, Sprite.balloom_left3, animate, timeTransferOfBalloom).getFxImage());
 
                 break;
-            case 10: case 11: case 12: case 13: case 14:
-                this.y -= velocityOfBalloom;
-                if (checkCollisionOfBalloom()) {
-                    this.y += velocityOfBalloom;
+            case 2:
+
+                tempY -= velocityOfBalloom;
+                if(checkCollisionOfBalloom()){
+                    tempY += velocityOfBalloom;
+                    Random random = new Random();
+                    setDirection(random.nextInt(4));
                 }
+                setY(tempY);
                 break;
-            case 15: case 16: case 17: case 18: case 19:
-                this.y += velocityOfBalloom;
-                if (checkCollisionOfBalloom()) {
-                    this.y -= velocityOfBalloom;
+            case 3:
+
+                tempY += velocityOfBalloom;
+
+                if(checkCollisionOfBalloom()){
+                    tempY -= velocityOfBalloom;
+                    Random random = new Random();
+                    setDirection(random.nextInt(4));
                 }
-                break;
-            default:
+                setY(tempY);
                 break;
         }
+
     }
 
     public boolean checkCollisionOfBalloom() {
         //check with wall
         for (int i = 0; i < 4; i++) {
-            int checkOfBalloomX = (getX() + checkPosOfBalloomX[i]) / Sprite.SCALED_SIZE;
-            int checkOfBalloomY = (getY() + checkPosOfBalloomY[i]) / Sprite.SCALED_SIZE;
+            int checkOfBalloomX = (tempX + checkPosOfBalloomX[i]) / Sprite.SCALED_SIZE;
+            int checkOfBalloomY = (tempY + checkPosOfBalloomY[i]) / Sprite.SCALED_SIZE;
             Entity e = getEntityInCoordination(checkOfBalloomX, checkOfBalloomY);
             if (e instanceof Wall || e instanceof Brick) {
                 return true;

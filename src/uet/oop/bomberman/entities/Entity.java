@@ -7,8 +7,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import uet.oop.bomberman.graphics.Sprite;
 
-import static uet.oop.bomberman.BombermanGame.bricks;
-import static uet.oop.bomberman.BombermanGame.walls;
+import static uet.oop.bomberman.BombermanGame.*;
 
 public abstract class Entity {
     protected int animate = 0;
@@ -77,6 +76,11 @@ public abstract class Entity {
             }
         }
         for(Entity e : bricks){
+            if(e.getXUnit() == x && e.getYUnit() == y) {
+                return e;
+            }
+        }
+        for(Entity e : ballooms) {
             if(e.getXUnit() == x && e.getYUnit() == y) {
                 return e;
             }
