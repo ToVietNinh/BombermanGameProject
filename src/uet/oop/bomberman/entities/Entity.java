@@ -59,6 +59,10 @@ public abstract class Entity {
         this.img = img;
     }
 
+    public Entity(){
+
+    }
+
     public void animate(){
         if(animate > MAX_ANIMATE) {
             animate = 0;
@@ -81,6 +85,11 @@ public abstract class Entity {
             }
         }
         for(Entity e : ballooms) {
+            if(e.getXUnit() == x && e.getYUnit() == y) {
+                return e;
+            }
+        }
+        for(Entity e : bomb_items) {
             if(e.getXUnit() == x && e.getYUnit() == y) {
                 return e;
             }

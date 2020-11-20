@@ -9,11 +9,14 @@ import uet.oop.bomberman.graphics.Sprite;
 
 import static uet.oop.bomberman.BombermanGame.*;
 
+import static uet.oop.bomberman.entities.BombItem.*;
+
 public class Bomber extends Entity {
 
     public int isMoving;
     protected final int timeTransfer = 26;
     protected int velocity = 2;
+    protected int powerSpeed = 3;
     protected int count;
 
     public boolean checkLeft, checkRight, checkUp, checkDown;
@@ -29,28 +32,26 @@ public class Bomber extends Entity {
     public void update() {
         animate();
         move();
-        /*if (checkCollisionDead()) {
+        if (checkCollisionDead()) {
             //bomberman.setImg(Sprite.movingSprite(Sprite.player_dead1,Sprite.player_dead2,Sprite.player_dead3,animate,timeTransfer).getFxImage());
-            bomberman.setX(1);
-            bomberman.setY(1);
-            positionX=1;
-            positionY =1;
-        }*/
+            bomberman.setX(Sprite.SCALED_SIZE);
+            bomberman.setY(Sprite.SCALED_SIZE);
+            positionX = bomberman.getX();
+            positionY = bomberman.getY();
+            bomberman.setImg(Sprite.player_right.getFxImage());
+        }
+        placeBomb();
     }
 
     public void move() {
-        if (checkCollisionDead()) {
-            //bomberman.setImg(Sprite.movingSprite(Sprite.player_dead1,Sprite.player_dead2,Sprite.player_dead3,animate,timeTransfer).getFxImage());
-            bomberman.setX(1);
-            bomberman.setY(1);
-            positionX = 1;
-            positionY = 1;
-        }
-        if (goLeft) {
 
-            positionX -= velocity;
+
+        if (goLeft) {
+            if (shift) positionX -= powerSpeed;
+            else if (shift == false) positionX -= velocity;
             if (checkCollision()) {
-                positionX += velocity;
+                if (shift) positionX += powerSpeed;
+                else if (shift == false) positionX += velocity;
             }
             bomberman.setX(positionX);
             bomberman.setImg(Sprite.movingSprite(Sprite.player_left, Sprite.player_left_1, Sprite.player_left_2, animate, timeTransfer).getFxImage());
@@ -59,10 +60,11 @@ public class Bomber extends Entity {
 
 
         if (goRight) {
-
-            positionX += velocity;
+            if (shift) positionX += powerSpeed;
+            else if (shift == false) positionX += velocity;
             if (checkCollision()) {
-                positionX -= velocity;
+                if (shift) positionX -= powerSpeed;
+                else if (shift == false) positionX -= velocity;
             }
             bomberman.setX(positionX);
             bomberman.setImg(Sprite.movingSprite(Sprite.player_right, Sprite.player_right_1, Sprite.player_right_2, animate, timeTransfer).getFxImage());
@@ -70,18 +72,22 @@ public class Bomber extends Entity {
 
 
         if (goUp) {
-            positionY -= velocity;
+            if (shift) positionY -= powerSpeed;
+            else if (shift == false) positionY -= velocity;
             if (checkCollision()) {
-                positionY += velocity;
+                if (shift) positionY += powerSpeed;
+                else if (shift == false) positionY += velocity;
             }
             bomberman.setY(positionY);
             bomberman.setImg(Sprite.movingSprite(Sprite.player_up, Sprite.player_up_1, Sprite.player_up_2, animate, timeTransfer).getFxImage());
 
         }
         if (goDown) {
-            positionY += velocity;
+            if (shift) positionY += powerSpeed;
+            else if (shift == false) positionY += velocity;
             if (checkCollision()) {
-                positionY -= velocity;
+                if (shift) positionY -= powerSpeed;
+                else if (shift == false) positionY -= velocity;
             }
             bomberman.setY(positionY);
             bomberman.setImg(Sprite.movingSprite(Sprite.player_down, Sprite.player_down_1, Sprite.player_down_2, animate, timeTransfer).getFxImage());
@@ -97,7 +103,7 @@ public class Bomber extends Entity {
             int checkX = (positionX + collisionX[i]) / Sprite.SCALED_SIZE;
             int checkY = (positionY + collisionY[i]) / Sprite.SCALED_SIZE;
             Entity e = getEntityInCoordination(checkX, checkY);
-            if (e instanceof Wall || e instanceof Brick) {
+            if (e instanceof Wall || e instanceof Brick ) {
                 return true;
             }
         }
@@ -105,17 +111,32 @@ public class Bomber extends Entity {
     }
 
     public boolean checkCollisionDead() {
-        /*for (int i = 0; i < 4; i++) {
-            int checkDeadX = (positionX + collisionX[i]) / Sprite.SCALED_SIZE;
-            int checkDeadY = (positionY + collisionY[i]) / Sprite.SCALED_SIZE;
+        for (int i = 0; i < 4; i++) {
+            int checkDeadX = (this.getX() + collisionX[i]) / Sprite.SCALED_SIZE;
+            int checkDeadY = (this.getY() + collisionY[i]) / Sprite.SCALED_SIZE;
             Entity e = getEntityInCoordination(checkDeadX, checkDeadY);
             if (e instanceof Balloom) {
                 return true;
             }
-        }*/
+        }
         return false;
     }
 
+
+    public void placeBomb() {
+
+        if (space && bomb_count <1 && bombQty > 0) {
+            Entity object = null;
+            bomb_count++;
+            object = new BombItem((getX() + 16) / Sprite.SCALED_SIZE, (getY()+16) / Sprite.SCALED_SIZE, Sprite.bomb.getFxImage());
+            bomb_items.add(object);
+            System.out.println(count++);
+            bombQty--;
+            checkTemp = false;
+        }
+        if(space == false) bomb_count =0;
+
+    }
 
 
 }

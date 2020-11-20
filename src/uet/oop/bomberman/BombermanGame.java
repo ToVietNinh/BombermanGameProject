@@ -20,10 +20,10 @@ import java.util.List;
 import java.util.Vector;
 
 public class BombermanGame extends Application {
-    
+
     public static final int WIDTH = 31;
     public static final int HEIGHT = 13;
-    
+
     private GraphicsContext gc;
     private Canvas canvas;
     public static List<Entity> walls = new ArrayList<>();
@@ -32,9 +32,11 @@ public class BombermanGame extends Application {
     public static List<Entity> oneals = new ArrayList<>();
     public static List<Entity> bomb_items = new ArrayList<>();
     public static Entity bomberman;
-    public static boolean goUp, goDown, goLeft, goRight,space,isMoving;
+    public static Entity bombItem;
+    public static boolean goUp, goDown, goLeft, goRight, space, isMoving, shift, alt;
     public static int positionX, positionY;
-    public char [][] contentFileLever1 = new char[14][32];
+    public static boolean checkPlaceMore, checkTemp;
+    public char[][] contentFileLever1 = new char[14][32];
 
 
     public static void main(String[] args) {
@@ -53,18 +55,39 @@ public class BombermanGame extends Application {
 
         // Tao scene
         Scene scene = new Scene(root);
-        scene.setFill(Color.rgb(80,160,0));
+        scene.setFill(Color.rgb(80, 160, 0));
 
         scene.setOnKeyPressed(
                 new EventHandler<KeyEvent>() {
                     @Override
                     public void handle(KeyEvent event) {
-                        switch (event.getCode()){
-                            case UP: goUp = true;isMoving=true;break;
-                            case DOWN: goDown = true;isMoving=true;break;
-                            case LEFT: goLeft = true;isMoving=true;break;
-                            case RIGHT: goRight = true;isMoving=true;break;
-                            case SPACE: space = true; break;
+                        switch (event.getCode()) {
+                            case UP:
+                                goUp = true;
+                                isMoving = true;
+                                break;
+                            case DOWN:
+                                goDown = true;
+                                isMoving = true;
+                                break;
+                            case LEFT:
+                                goLeft = true;
+                                isMoving = true;
+                                break;
+                            case RIGHT:
+                                goRight = true;
+                                isMoving = true;
+                                break;
+                            case SPACE:
+                                space = true;
+
+                                break;
+                            case SHIFT:
+                                shift = true;
+                                break;
+                            case ALT:
+                                alt = true;
+                                break;
                         }
                     }
                 }
@@ -73,12 +96,32 @@ public class BombermanGame extends Application {
                 new EventHandler<KeyEvent>() {
                     @Override
                     public void handle(KeyEvent event) {
-                        switch (event.getCode()){
-                            case UP: goUp = false;isMoving=false;break;
-                            case DOWN: goDown = false;isMoving=false;break;
-                            case LEFT: goLeft = false;isMoving=false;break;
-                            case RIGHT: goRight = false;isMoving=false;break;
-                            case SPACE: space = false; break;
+                        switch (event.getCode()) {
+                            case UP:
+                                goUp = false;
+                                isMoving = false;
+                                break;
+                            case DOWN:
+                                goDown = false;
+                                isMoving = false;
+                                break;
+                            case LEFT:
+                                goLeft = false;
+                                isMoving = false;
+                                break;
+                            case RIGHT:
+                                goRight = false;
+                                isMoving = false;
+                                break;
+                            case SPACE:
+                                space = false;
+                                break;
+                            case SHIFT:
+                                shift = false;
+                                break;
+                            case ALT:
+                                alt = false;
+                                break;
                         }
                     }
                 }
@@ -112,15 +155,18 @@ public class BombermanGame extends Application {
         bomberman = new Bomber(1, 1, Sprite.player_right.getFxImage());
         positionX = bomberman.getX();
         positionY = bomberman.getY();
+
+        bombItem = new BombItem(1,3,Sprite.bomb.getFxImage());
+
     }
 
     //FileInputStream fileInputStream = new FileInputStream("mapLevel1.txt");
-    public void createMap() throws Exception{
+    public void createMap() throws Exception {
         FileReader fr = new FileReader("C:/Users/Admin/Desktop/bomberman_project/res/levels/mapLevel1.txt");
         BufferedReader br = new BufferedReader(fr);
-        for(int i=0; i<HEIGHT; i++) {
+        for (int i = 0; i < HEIGHT; i++) {
             String line = br.readLine();
-            for(int j=0; j< WIDTH; j++){
+            for (int j = 0; j < WIDTH; j++) {
                 contentFileLever1[i][j] = line.charAt(j);
 
             }
@@ -129,20 +175,17 @@ public class BombermanGame extends Application {
         for (int i = 0; i < HEIGHT; i++) {
             for (int j = 0; j < WIDTH; j++) {
                 Entity object = null;
-                if(contentFileLever1[i][j] == '#'){
-                    object = new Wall(j,i,Sprite.wall.getFxImage());
+                if (contentFileLever1[i][j] == '#') {
+                    object = new Wall(j, i, Sprite.wall.getFxImage());
                     walls.add(object);
-                }
-                else if(contentFileLever1[i][j] == '*'){
-                    object = new Brick(j,i,Sprite.brick.getFxImage());
+                } else if (contentFileLever1[i][j] == '*') {
+                    object = new Brick(j, i, Sprite.brick.getFxImage());
                     bricks.add(object);
-                }
-                else if(contentFileLever1[i][j] == '1'){
-                    object = new Balloom(j,i, Sprite.balloom_right1.getFxImage());
+                } else if (contentFileLever1[i][j] == '1') {
+                    object = new Balloom(j, i, Sprite.balloom_right1.getFxImage());
                     ballooms.add(object);
-                }
-                else if(contentFileLever1[i][j] == '2'){
-                    object = new Oneal(j,i,Sprite.oneal_right1.getFxImage());
+                } else if (contentFileLever1[i][j] == '2') {
+                    object = new Oneal(j, i, Sprite.oneal_right1.getFxImage());
                     oneals.add(object);
                 }
 
@@ -151,8 +194,7 @@ public class BombermanGame extends Application {
     }
 
 
-
-    public void update(){
+    public void update() {
         walls.forEach(Entity::update);
         bomberman.update();
         ballooms.forEach(Entity::update);
@@ -162,7 +204,7 @@ public class BombermanGame extends Application {
 
     public void renderEntities() {
         //gc.clearRect(bomberman.getX()-2, bomberman.getY()-3, 32, 39);
-        gc.clearRect(0,0,canvas.getWidth(),canvas.getHeight());
+        gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
         bomberman.render(gc);
         /*for(Entity eBalloom: ballooms){
             gc.clearRect(eBalloom.getX()-2 , eBalloom.getY()-3,37,39);
@@ -174,7 +216,7 @@ public class BombermanGame extends Application {
         bomb_items.forEach(g -> g.render(gc));
     }
 
-    public void renderStillObject(){
+    public void renderStillObject() {
         //walls.forEach(g -> g.render(gc));
     }
 }

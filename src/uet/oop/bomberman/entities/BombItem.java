@@ -7,25 +7,37 @@ import static uet.oop.bomberman.BombermanGame.*;
 
 public class BombItem extends Entity {
 
-    protected final int bombQty = 2;
+    protected static int bombQty = 3;
 
-    protected int bombIsPlace = bombQty;
+    protected static int bomb_count = 0;
+
+    protected int timeTransferOfBomb = 26;
+
+    protected int frameBomb = 3;
 
     public BombItem(int x, int y, Image img) {
         super(x, y, img);
     }
 
+
     @Override
     public void update() {
-        placeBomb();
+        animate();
+        explodeBomb();
     }
 
-    public void placeBomb() {
-        if (space && bombIsPlace > 0) {
-            Entity object = null;
-            object = new BombItem(bomberman.getYUnit(), bomberman.getXUnit(), Sprite.bomb.getFxImage());
-            bomb_items.add(object);
-            bombIsPlace--;
+    public void explodeBomb() {
+        if(alt) {
+            for(int i=0;i<bomb_items.size();i++){
+                while(frameBomb >0){
+                    bomb_items.get(i).setImg(Sprite.movingSprite(Sprite.bomb_exploded, Sprite.bomb_exploded1,Sprite.bomb_exploded2,animate,timeTransferOfBomb).getFxImage());
+                    frameBomb--;
+                }
+
+            }
         }
     }
+
+
+
 }

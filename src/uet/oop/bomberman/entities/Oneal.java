@@ -17,7 +17,7 @@ public class Oneal extends Entity {
         super(x, y, img);
     }
 
-    protected final int pointToSwitch = 300;
+    protected final int pointToSwitch = 100;
 
     protected int switchMove=0;
 
@@ -46,7 +46,7 @@ public class Oneal extends Entity {
     public void move(){
         // -- 0:right - 1:left - 2:up - 3:down -- //
         int count = 0;
-        if(switchMove>303) switchMove=0;
+        if(switchMove>105) switchMove=0;
         switch (direction) {
             case 0:
             {
