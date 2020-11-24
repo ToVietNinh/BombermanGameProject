@@ -17,7 +17,9 @@ public class Bomber extends Entity {
     protected final int timeTransfer = 26;
     protected int velocity = 2;
     protected int powerSpeed = 3;
-    protected int count;
+    protected int count = 1;
+    protected boolean movedOutBomb = true;
+    protected int spaceToMoveOut = 32;
 
     public boolean checkLeft, checkRight, checkUp, checkDown;
 
@@ -32,14 +34,14 @@ public class Bomber extends Entity {
     public void update() {
         animate();
         move();
-        if (checkCollisionDead()) {
+        /*if (checkCollisionDead()) {
             //bomberman.setImg(Sprite.movingSprite(Sprite.player_dead1,Sprite.player_dead2,Sprite.player_dead3,animate,timeTransfer).getFxImage());
             bomberman.setX(Sprite.SCALED_SIZE);
             bomberman.setY(Sprite.SCALED_SIZE);
             positionX = bomberman.getX();
             positionY = bomberman.getY();
             bomberman.setImg(Sprite.player_right.getFxImage());
-        }
+        }*/
         placeBomb();
     }
 
@@ -98,45 +100,79 @@ public class Bomber extends Entity {
 
 
     public boolean checkCollision() {
-        //check with wall
+        boolean checkTemp;
+
+        //check with wall, brick, bombitem
         for (int i = 0; i < 4; i++) {
             int checkX = (positionX + collisionX[i]) / Sprite.SCALED_SIZE;
             int checkY = (positionY + collisionY[i]) / Sprite.SCALED_SIZE;
             Entity e = getEntityInCoordination(checkX, checkY);
-            if (e instanceof Wall || e instanceof Brick ) {
+            if (e instanceof Wall || e instanceof Brick) {
                 return true;
             }
+
+
+            /* (e instanceof BombItem ) {
+                return true;
+            }*/
         }
+        /*if(checkBomberInBombItem() && bomb_items.size() >0) {
+            return false;
+        }*/
         return false;
     }
 
     public boolean checkCollisionDead() {
-        for (int i = 0; i < 4; i++) {
+        /*for (int i = 0; i < 4; i++) {
             int checkDeadX = (this.getX() + collisionX[i]) / Sprite.SCALED_SIZE;
             int checkDeadY = (this.getY() + collisionY[i]) / Sprite.SCALED_SIZE;
             Entity e = getEntityInCoordination(checkDeadX, checkDeadY);
             if (e instanceof Balloom) {
                 return true;
             }
-        }
+        }*/
         return false;
     }
 
 
-    public void placeBomb() {
 
-        if (space && bomb_count <1 && bombQty > 0) {
+    public boolean checkBomberInBombItem() {
+        for (Entity e : bomb_items) {
+            if (getX() + Sprite.SCALED_SIZE +5 < e.getX() || getX() > e.getX() + Sprite.SCALED_SIZE-10
+                    || getY() + Sprite.SCALED_SIZE -10 < e.getY() || getY() > e.getY() + Sprite.SCALED_SIZE -10) {
+                return false;
+            }
+
+            /*if ((e.getX() <= getX() + 32 && getY() + 32 >= e.getY() && getY() <= e.getY() + 32)
+                    || (e.getX() + 32 >= getX() && getY() + 32 >= e.getY() && getY() <= e.getY() + 32)
+                    || (e.getY() <= getY() + 32 && getX() + 32 >= e.getX() && getX() <= e.getX() + 32)
+                    || (e.getY() + 32 >= getY() && getX() + 32 >= e.getX() && getX() <= e.getX() + 32))*/
+
+        }
+        return true;
+    }
+
+    public void placeBomb() {
+        if (space && bomb_count < 1 && bombQty > 0) {
+
             Entity object = null;
             bomb_count++;
-            object = new BombItem((getX() + 16) / Sprite.SCALED_SIZE, (getY()+16) / Sprite.SCALED_SIZE, Sprite.bomb.getFxImage());
+            object = new BombItem((bomberman.getX()+16) / Sprite.SCALED_SIZE, (bomberman.getY()+16) / Sprite.SCALED_SIZE, Sprite.bomb.getFxImage());
             bomb_items.add(object);
-            System.out.println(count++);
+            ((BombItem) object).loadFrame();
+            ((BombItem) object) .explodeBombFunctionFrame();
+            //System.out.println(count++);
+            //object.setImg(null);
+            /*if(((BombItem) object).checkExplode){
+                System.out.println("aaa");
+               bomb_items.get(bomb_items.indexOf(object)).setImg(null);
+               //bomb_items.remove(object);
+            }*/
             bombQty--;
             checkTemp = false;
         }
-        if(space == false) bomb_count =0;
+        if (space == false) bomb_count = 0;
 
     }
-
 
 }

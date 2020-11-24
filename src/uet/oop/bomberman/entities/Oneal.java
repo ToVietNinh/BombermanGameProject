@@ -10,8 +10,8 @@ import static uet.oop.bomberman.BombermanGame.positionY;
 
 public class Oneal extends Entity {
 
-    public int checkPosOfOnealX[] = {5, Sprite.SCALED_SIZE - 5, 5, Sprite.SCALED_SIZE - 5};
-    public int checkPosOfOnealY[] = {5, 5, Sprite.SCALED_SIZE - 5, Sprite.SCALED_SIZE - 5};
+    public int checkPosOfOnealX[] = {1, Sprite.SCALED_SIZE - 1, 1, Sprite.SCALED_SIZE - 1};
+    public int checkPosOfOnealY[] = {1, 1, Sprite.SCALED_SIZE - 1, Sprite.SCALED_SIZE - 1};
 
     public Oneal(int x, int y, Image img) {
         super(x, y, img);
@@ -21,7 +21,7 @@ public class Oneal extends Entity {
 
     protected int switchMove=0;
 
-    public final int velocityOfOneal = 2;
+    public final int velocityOfOneal = 3;
 
     private int timeTransferOfOneal = 60;
 
@@ -46,13 +46,13 @@ public class Oneal extends Entity {
     public void move(){
         // -- 0:right - 1:left - 2:up - 3:down -- //
         int count = 0;
-        if(switchMove>105) switchMove=0;
+        if(switchMove>102) switchMove=0;
         switch (direction) {
             case 0:
             {
                 switchMove++;
                 tempX += velocityOfOneal;
-                if(checkCollisionOfBalloom()){
+                if(checkCollisionOfOneal()){
                     tempX -= velocityOfOneal;
                     Random random = new Random();
                     setDirection(random.nextInt(4));
@@ -68,7 +68,7 @@ public class Oneal extends Entity {
             case 1:
                 switchMove++;
                 tempX -= velocityOfOneal;
-                if(checkCollisionOfBalloom() ){
+                if(checkCollisionOfOneal() ){
                     tempX += velocityOfOneal;
                     Random random = new Random();
                     setDirection(random.nextInt(4));
@@ -84,7 +84,7 @@ public class Oneal extends Entity {
             case 2:
                 switchMove++;
                 tempY -= velocityOfOneal;
-                if(checkCollisionOfBalloom() ){
+                if(checkCollisionOfOneal() ){
                     tempY += velocityOfOneal;
                     Random random = new Random();
                     setDirection(random.nextInt(4));
@@ -99,7 +99,7 @@ public class Oneal extends Entity {
                 switchMove++;
                 tempY += velocityOfOneal;
 
-                if(checkCollisionOfBalloom()){
+                if(checkCollisionOfOneal()){
                     tempY -= velocityOfOneal;
                     Random random = new Random();
                     setDirection(random.nextInt(4));
@@ -114,13 +114,13 @@ public class Oneal extends Entity {
 
     }
 
-    public boolean checkCollisionOfBalloom() {
+    public boolean checkCollisionOfOneal() {
         //check with wall
         for (int i = 0; i < 4; i++) {
-            int checkOfBalloomX = (tempX + checkPosOfOnealX[i]) / Sprite.SCALED_SIZE;
-            int checkOfBalloomY = (tempY + checkPosOfOnealY[i]) / Sprite.SCALED_SIZE;
-            Entity e = getEntityInCoordination(checkOfBalloomX, checkOfBalloomY);
-            if (e instanceof Wall || e instanceof Brick) {
+            int checkOfOnealX = (tempX + checkPosOfOnealX[i]) / Sprite.SCALED_SIZE;
+            int checkOfOnealY = (tempY + checkPosOfOnealY[i]) / Sprite.SCALED_SIZE;
+            Entity e = getEntityInCoordination(checkOfOnealX, checkOfOnealY);
+            if (e instanceof Wall || e instanceof Brick || e instanceof BombItem) {
                 return true;
             }
         }

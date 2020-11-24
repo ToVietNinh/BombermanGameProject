@@ -13,11 +13,13 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import uet.oop.bomberman.entities.*;
 import uet.oop.bomberman.graphics.Sprite;
+import uet.oop.bomberman.entities.BombItem.*;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Vector;
+import java.util.*;
+
+import static uet.oop.bomberman.entities.BombItem.*;
+
 
 public class BombermanGame extends Application {
 
@@ -31,12 +33,16 @@ public class BombermanGame extends Application {
     public static List<Entity> ballooms = new ArrayList<>();
     public static List<Entity> oneals = new ArrayList<>();
     public static List<Entity> bomb_items = new ArrayList<>();
+    public static List<Entity> flame_list = new ArrayList<>();
     public static Entity bomberman;
     public static Entity bombItem;
     public static boolean goUp, goDown, goLeft, goRight, space, isMoving, shift, alt;
     public static int positionX, positionY;
     public static boolean checkPlaceMore, checkTemp;
     public char[][] contentFileLever1 = new char[14][32];
+    protected int count = 1;
+
+
 
 
     public static void main(String[] args) {
@@ -157,7 +163,10 @@ public class BombermanGame extends Application {
         positionY = bomberman.getY();
 
         bombItem = new BombItem(1,3,Sprite.bomb.getFxImage());
-
+        //bomb_items.add(new BombItem(3,2,Sprite.bomb.getFxImage()));
+        for(Entity e : bomb_items) {
+            bombItem.update();
+        }
     }
 
     //FileInputStream fileInputStream = new FileInputStream("mapLevel1.txt");
@@ -171,7 +180,6 @@ public class BombermanGame extends Application {
 
             }
         }
-
         for (int i = 0; i < HEIGHT; i++) {
             for (int j = 0; j < WIDTH; j++) {
                 Entity object = null;
@@ -191,7 +199,9 @@ public class BombermanGame extends Application {
 
             }
         }
+
     }
+
 
 
     public void update() {
@@ -200,6 +210,14 @@ public class BombermanGame extends Application {
         ballooms.forEach(Entity::update);
         oneals.forEach(Entity::update);
         bomb_items.forEach(Entity::update);
+
+        for(Entity e : bomb_items) {
+            if(e.getImg() == null) {
+                bomb_items.remove(e);
+                break;
+
+            }
+        }
     }
 
     public void renderEntities() {
@@ -219,4 +237,5 @@ public class BombermanGame extends Application {
     public void renderStillObject() {
         //walls.forEach(g -> g.render(gc));
     }
+
 }

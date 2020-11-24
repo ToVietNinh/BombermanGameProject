@@ -10,14 +10,14 @@ import static uet.oop.bomberman.BombermanGame.positionY;
 
 public class Balloom extends Entity {
 
-    public int checkPosOfBalloomX[] = {5, Sprite.SCALED_SIZE - 5, 5, Sprite.SCALED_SIZE - 5};
-    public int checkPosOfBalloomY[] = {5, 5, Sprite.SCALED_SIZE - 5, Sprite.SCALED_SIZE - 5};
+    public int checkPosOfBalloomX[] = {1, Sprite.SCALED_SIZE - 1, 1, Sprite.SCALED_SIZE - 1};
+    public int checkPosOfBalloomY[] = {1, 1, Sprite.SCALED_SIZE - 1, Sprite.SCALED_SIZE - 1};
 
     public Balloom(int x, int y, Image img) {
         super(x, y, img);
     }
 
-    public final int velocityOfBalloom = 1;
+    public final int velocityOfBalloom = 2;
 
     private int timeTransferOfBalloom = 60;
 
@@ -59,6 +59,7 @@ public class Balloom extends Entity {
 
                 tempX -= velocityOfBalloom;
                 if(checkCollisionOfBalloom()){
+                    //System.out.println("va cham bom");
                     tempX += velocityOfBalloom;
                     Random random = new Random();
                     setDirection(random.nextInt(4));
@@ -98,7 +99,7 @@ public class Balloom extends Entity {
             int checkOfBalloomX = (tempX + checkPosOfBalloomX[i]) / Sprite.SCALED_SIZE;
             int checkOfBalloomY = (tempY + checkPosOfBalloomY[i]) / Sprite.SCALED_SIZE;
             Entity e = getEntityInCoordination(checkOfBalloomX, checkOfBalloomY);
-            if (e instanceof Wall || e instanceof Brick) {
+            if (e instanceof Wall || e instanceof Brick || e instanceof BombItem) {
                 return true;
             }
         }

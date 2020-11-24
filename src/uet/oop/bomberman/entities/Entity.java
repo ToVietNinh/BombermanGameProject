@@ -89,6 +89,11 @@ public abstract class Entity {
                 return e;
             }
         }
+        for(Entity e : oneals) {
+            if(e.getXUnit() == x && e.getYUnit() == y) {
+                return e;
+            }
+        }
         for(Entity e : bomb_items) {
             if(e.getXUnit() == x && e.getYUnit() == y) {
                 return e;
@@ -101,4 +106,5 @@ public abstract class Entity {
         gc.drawImage(img, x, y);
     }
     public abstract void update();
+
 }
