@@ -17,6 +17,16 @@ public class Balloom extends Entity {
         super(x, y, img);
     }
 
+    protected boolean checkDied;
+
+    public boolean isCheckDied() {
+        return checkDied;
+    }
+
+    public void setCheckDied(boolean checkDied) {
+        this.checkDied = checkDied;
+    }
+
     public final int velocityOfBalloom = 2;
 
     private int timeTransferOfBalloom = 60;
@@ -24,6 +34,8 @@ public class Balloom extends Entity {
     protected int tempX = this.getX(), tempY = this.getY();
 
     protected int direction;
+
+    private int timeToDisappearBalloom = 80;
 
     public int getDirection() {
         return direction;
@@ -35,8 +47,18 @@ public class Balloom extends Entity {
 
     @Override
     public void update() {
-        animate();
-        move();
+        if(!isCheckDied()) {
+            animate();
+            move();
+        }
+        else {
+            if(timeToDisappearBalloom-- >0) {
+                setImg(Sprite.balloom_dead.getFxImage());
+            }
+            else {
+                setImg(null);
+            }
+        }
     }
 
     public void move(){

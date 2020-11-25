@@ -17,6 +17,16 @@ public class Oneal extends Entity {
         super(x, y, img);
     }
 
+    protected boolean checkDied;
+
+    public boolean isCheckDied() {
+        return checkDied;
+    }
+
+    public void setCheckDied(boolean checkDied) {
+        this.checkDied = checkDied;
+    }
+
     protected final int pointToSwitch = 100;
 
     protected int switchMove=0;
@@ -29,6 +39,8 @@ public class Oneal extends Entity {
 
     protected int direction;
 
+    private int timeToDisappearOneal = 80;
+
     public int getDirection() {
         return direction;
     }
@@ -39,8 +51,18 @@ public class Oneal extends Entity {
 
     @Override
     public void update() {
-        animate();
-        move();
+        if(!isCheckDied()) {
+            animate();
+            move();
+        }
+        else {
+            if(timeToDisappearOneal-- >0) {
+                setImg(Sprite.oneal_dead.getFxImage());
+            }
+            else {
+                setImg(null);
+            }
+        }
     }
 
     public void move(){

@@ -20,8 +20,18 @@ public class Bomber extends Entity {
     protected int count = 1;
     protected boolean movedOutBomb = true;
     protected int spaceToMoveOut = 32;
-
+    protected int timeToDisappear = 200;
     public boolean checkLeft, checkRight, checkUp, checkDown;
+
+    protected boolean checkDied;
+
+    public boolean isCheckDied() {
+        return checkDied;
+    }
+
+    public void setCheckDied(boolean checkDied) {
+        this.checkDied = checkDied;
+    }
 
     public int collisionX[] = {0, Sprite.SCALED_SIZE - 10, 0, Sprite.SCALED_SIZE - 10};
     public int collisionY[] = {2, 2, Sprite.SCALED_SIZE - 5, Sprite.SCALED_SIZE - 5};
@@ -32,17 +42,27 @@ public class Bomber extends Entity {
 
     @Override
     public void update() {
-        animate();
-        move();
-        /*if (checkCollisionDead()) {
-            //bomberman.setImg(Sprite.movingSprite(Sprite.player_dead1,Sprite.player_dead2,Sprite.player_dead3,animate,timeTransfer).getFxImage());
-            bomberman.setX(Sprite.SCALED_SIZE);
-            bomberman.setY(Sprite.SCALED_SIZE);
-            positionX = bomberman.getX();
-            positionY = bomberman.getY();
-            bomberman.setImg(Sprite.player_right.getFxImage());
-        }*/
-        placeBomb();
+        if(!isCheckDied()) {
+            animate();
+            move();
+            /*if (checkCollisionDead()) {
+                //bomberman.setImg(Sprite.movingSprite(Sprite.player_dead1,Sprite.player_dead2,Sprite.player_dead3,animate,timeTransfer).getFxImage());
+                bomberman.setX(Sprite.SCALED_SIZE);
+                bomberman.setY(Sprite.SCALED_SIZE);
+                positionX = bomberman.getX();
+                positionY = bomberman.getY();
+                bomberman.setImg(Sprite.player_right.getFxImage());
+            }*/
+            placeBomb();
+        } else {
+            if(timeToDisappear-- >0) {
+                animate();
+                setImg(Sprite.movingSprite(Sprite.player_dead1,Sprite.player_dead2,Sprite.player_dead3,animate,timeTransfer).getFxImage());
+            }
+            else {
+                setImg(null);
+            }
+        }
     }
 
     public void move() {
@@ -157,10 +177,10 @@ public class Bomber extends Entity {
 
             Entity object = null;
             bomb_count++;
-            object = new BombItem((bomberman.getX()+16) / Sprite.SCALED_SIZE, (bomberman.getY()+16) / Sprite.SCALED_SIZE, Sprite.bomb.getFxImage());
+            object = new BombItem((bomberman.getX()+16) / Sprite.SCALED_SIZE, (bomberman.getY()+16) / Sprite.SCALED_SIZE);
             bomb_items.add(object);
-            ((BombItem) object).loadFrame();
-            ((BombItem) object) .explodeBombFunctionFrame();
+            //((BombItem) object).loadFrame();
+            //((BombItem) object) .explodeBombFunctionFrame();
             //System.out.println(count++);
             //object.setImg(null);
             /*if(((BombItem) object).checkExplode){

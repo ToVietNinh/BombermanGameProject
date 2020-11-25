@@ -73,7 +73,7 @@ public abstract class Entity {
     }
 
 
-    public Entity getEntityInCoordination(int x, int y){
+    public static Entity getEntityInCoordination(int x, int y){
         for(Entity e : walls) {
             if(e.getXUnit() == x && e.getYUnit() == y){
                 return e;

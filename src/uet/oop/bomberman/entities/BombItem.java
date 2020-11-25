@@ -1,161 +1,168 @@
 package uet.oop.bomberman.entities;
 
-import javafx.scene.image.Image;
-import uet.oop.bomberman.graphics.Sprite;
+import java.util.ArrayList;
+import java.util.List;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
+import javafx.scene.canvas.GraphicsContext;
 import static uet.oop.bomberman.BombermanGame.*;
 
+import uet.oop.bomberman.BombermanGame;
+import uet.oop.bomberman.entities.Entity;
+import uet.oop.bomberman.entities.Flame;
+import uet.oop.bomberman.graphics.Sprite;
+
 public class BombItem extends Entity {
+    private int timeBeforeExplore = 130;
+    private int timeFlame = 15;
+    private int timeTransfer = 40;
+    public boolean explored;
+    private int flameLen = 2;
+    protected static int bomb_count = 0;
+    protected static int bombQty = 10;
 
-    public static int bombQty = 20;
-
-    public static int bomb_count = 0;
-
-    protected int timeTransferOfBomb = 26;
-
-    protected int frameBomb = 20;
-
-    protected int checkUpdateMore =0;
-
-    protected int temp;
-
-    protected boolean checkExplode;
-
-    protected boolean checkToContinue ;
-
-    public BombItem(int x, int y, Image img) {
-        super(x, y, img);
+    public void setFlameList(List<Flame> flameList) {
+        BombItem.flameList = flameList;
     }
-    int c = 0;
-    protected int countToVoidExplodeFrame = 0;
+
+    public static List<Flame> flameList = new ArrayList<>();
+
+    public BombItem(int x, int y) {
+        super(x, y, Sprite.bomb.getFxImage());
+        this.flameLen = flameLen;
+        explored = false;
+    }
 
     @Override
     public void update() {
-        /*if (getImg() != null){
-            if (!checkExplode) {
-                updateToLoadframe();
-                //animate();
-                if (checkToContinue) {
-                    //System.out.println(c++);
-                    updateToLoadExplodeFrame();
+        animate();
+        if (explored == false) {
+            if (timeBeforeExplore-- > 0) {
+                setImg(Sprite.movingSprite(Sprite.bomb, Sprite.bomb_1, Sprite.bomb_2, animate, timeTransfer).getFxImage());
+            } else {
+                explored = true;
+                explosion();
+            }
+        } else {
+            if (timeFlame-- == 0) {
+                setImg(null);
+                //flameList.clear();
+                for(Entity e : flameList ) {
+                    e.setImg(null);
                 }
             }
-        }*/
-        if(checkExplode) {
-            System.out.println("aaa");
-            setImg(null);
         }
     }
 
-    public void updateToLoadframe() {
+    private void explosion() {//init FlameList
+        int x = getXUnit();
+        int y = getYUnit();
 
-        if(bomb_items.size() > temp) {
-            checkUpdateMore--;
+        flameList.add(new Flame(x, y, 4, false));// add center
+        //truong hop bomber o tren qua bom
+        Entity e = getEntityInCoordination(x,y);
+        canPassThrough(e);
+
+        //check left
+        int il = 1;
+        for (; il <= flameLen; il++) { //check tu 1 den FrameLen neu gap vat can break
+            int xLeft = x - il;
+            e = getEntityInCoordination(xLeft,y);
+            if (!canPassThrough(e)) {
+                break;
+            }
         }
-        if(checkUpdateMore <1) {
-            loadFrame();
-            checkUpdateMore++;
+        for (int i = 1; i < il; i++) { // them flame tu 1 den do dai frame lon nhat co the
+            if (i == il - 1) {
+                flameList.add(new Flame(x - i, y, 2, true));
+            } else {
+                flameList.add(new Flame(x - i, y, 2, false));
+            }
         }
-        temp = bomb_items.size();
-    }
 
-    public void updateToLoadExplodeFrame() {
-        explodeBombFunctionFrame();
-
-
-    }
-
-    public void loadFrame() {
-        //checkToContinue = false;
-        Timer myTimer1 = new Timer();
-        myTimer1.schedule(new TimerTask()  {
-            @Override
-            public void run() {
-                Timer myTimer2 = new Timer();
-                setImg(Sprite.bomb.getFxImage());
-                myTimer2.schedule(new TimerTask() {
-                    @Override
-                    public void run() {
-                        Timer myTimer3 = new Timer();
-                        setImg(Sprite.bomb_1.getFxImage());
-
-                        myTimer3.schedule(new TimerTask() {
-                            @Override
-                            public void run() {
-                                setImg(Sprite.bomb_2.getFxImage());
-                                myTimer1.cancel();
-                                myTimer2.cancel();
-                                myTimer3.cancel();
-                            }
-                        },300,100);
-                    }
-                },300,100);
+        //check right
+        int ir = 1;
+        for (; ir <= flameLen; ir++) {
+            int xRight = x + ir;
+            e = getEntityInCoordination(xRight,y);
+            if (!canPassThrough(e)) {
+                break;
             }
-        },300,200);
+        }
+        for (int i = 1; i < ir; i++) {
+            if (i == ir - 1) {
+                flameList.add(new Flame(x + i, y, 3, true));
+            } else {
+                flameList.add(new Flame(x + i, y, 3, false));
+            }
+        }
 
-        //checkToContinue = true;
+        //check up
+        int iu = 1;
+        for (; iu <= flameLen; iu++) {
+            int yUp = y - iu;
+            e = getEntityInCoordination(x,yUp);
+            if (!canPassThrough(e)) {
+                break;
+            }
+        }
+        for (int i = 1; i < iu; i++) {
+            if (i == iu - 1) {
+                flameList.add(new Flame(x, y - i, 0, true));
+            } else {
+                flameList.add(new Flame(x, y - i, 0, false));
+            }
+        }
+
+        //check down
+        int id = 1;
+        for (; id <= flameLen; id++) {
+            int yDown = y + id;
+            e = getEntityInCoordination(x,yDown);
+            if (!canPassThrough(e)) {
+                break;
+            }
+        }
+        for (int i = 1; i < id; i++) {
+            if (i == id - 1) {
+                flameList.add(new Flame(x, y + i, 1, true));
+            } else {
+                flameList.add(new Flame(x, y + i, 1, false));
+            }
+        }
     }
 
-    public void explodeBombFunctionFrame() {
-        Timer myTimer1 = new Timer();
-
-        myTimer1.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                Timer myTimer2 = new Timer();
-
-                setImg(Sprite.bomb_exploded.getFxImage());
-                myTimer2.schedule(new TimerTask() {
-                    @Override
-                    public void run() {
-                        Timer myTimer3 = new Timer();
-
-                        setImg(Sprite.bomb_exploded1.getFxImage());
-                        myTimer3.schedule(new TimerTask() {
-                            @Override
-                            public void run() {
-                                checkExplode = true;
-
-                                setImg(Sprite.bomb_exploded2.getFxImage());
-                                myTimer1.cancel();
-                                myTimer2.cancel();
-                                myTimer3.cancel();
-
-                            }
-                        },300,200);
-
-                        //setImg(Sprite.movingSprite(Sprite.bomb_exploded,Sprite.bomb_exploded1,Sprite.bomb_exploded2,animate,timeTransferOfBomb).getFxImage());
-                    }
-                },100);
-
-
-            }
-
-
-        },2500);
-        //checkExplode = true;
-
-
+    public void frameRender(GraphicsContext gc) {
+        flameList.forEach(g -> g.render(gc));
     }
 
-    /*public void explodeBombFrame() {
-        myTimer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                explodeBombFunctionFrame();
-                checkExplode = true;
-                myTimer.schedule(new TimerTask() {
-                    @Override
-                    public void run() {
-                        myTimer.cancel();
-                    }
-                },100);
-            }
-        },1800);
-    }*/
+    public boolean isExplored() {
+        return explored;
+    }
 
+    public boolean canPassThrough(Entity e) { // return false if ko truyen qua dc e, true if truyen qua dc
+        if (e instanceof Brick) {
+            //((Brick) e).setDestroyed(true);
+            return false;
+        }
+        if (e instanceof Wall || e instanceof Portal) {
+            return false;
+        }
+        if (e instanceof Balloom ) {
+            ((Balloom) e).setCheckDied(true);
+        }
 
+        if(e instanceof Oneal) {
+            ((Oneal) e).setCheckDied(true);
+        }
+
+        if (e instanceof Bomber) {
+            System.out.println("aa");
+            ((Bomber) e) .setCheckDied(true);
+        }
+        return true;
+    }
+
+    public List<Flame> getFlameList() {
+        return flameList;
+    }
 }

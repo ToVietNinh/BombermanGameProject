@@ -33,7 +33,6 @@ public class BombermanGame extends Application {
     public static List<Entity> ballooms = new ArrayList<>();
     public static List<Entity> oneals = new ArrayList<>();
     public static List<Entity> bomb_items = new ArrayList<>();
-    public static List<Entity> flame_list = new ArrayList<>();
     public static Entity bomberman;
     public static Entity bombItem;
     public static boolean goUp, goDown, goLeft, goRight, space, isMoving, shift, alt;
@@ -162,7 +161,7 @@ public class BombermanGame extends Application {
         positionX = bomberman.getX();
         positionY = bomberman.getY();
 
-        bombItem = new BombItem(1,3,Sprite.bomb.getFxImage());
+        //bombItem = new BombItem(1,3,Sprite.bomb.getFxImage());
         //bomb_items.add(new BombItem(3,2,Sprite.bomb.getFxImage()));
         for(Entity e : bomb_items) {
             bombItem.update();
@@ -211,13 +210,7 @@ public class BombermanGame extends Application {
         oneals.forEach(Entity::update);
         bomb_items.forEach(Entity::update);
 
-        for(Entity e : bomb_items) {
-            if(e.getImg() == null) {
-                bomb_items.remove(e);
-                break;
-
-            }
-        }
+        removeEntityDisappeared();
     }
 
     public void renderEntities() {
@@ -231,11 +224,51 @@ public class BombermanGame extends Application {
         oneals.forEach(g -> g.render(gc));
         bricks.forEach(g -> g.render(gc));
         walls.forEach(g -> g.render(gc));
-        bomb_items.forEach(g -> g.render(gc));
+        //bomb_items.forEach(g -> g.render(gc));
+
+        for(Entity e : bomb_items) {
+            if(((BombItem) e).explored){
+                ((BombItem) e).frameRender(gc);
+            }
+            else {
+                e.render(gc);
+            }
+        }
+
+
+
     }
 
     public void renderStillObject() {
         //walls.forEach(g -> g.render(gc));
+    }
+
+    public void removeEntityDisappeared() {
+        for(Entity e : bomb_items) {
+            if(e.getImg() == null) {
+                bomb_items.remove(e);
+                break;
+
+            }
+        }
+
+        for(Entity e : ballooms) {
+            if(e.getImg() == null) {
+                ballooms.remove(e);
+                break;
+
+            }
+        }
+
+        for(Entity e : oneals) {
+            if(e.getImg() == null) {
+                oneals.remove(e);
+                break;
+            }
+        }
+        if(bomberman.getImg()==null) {
+
+        }
     }
 
 }
