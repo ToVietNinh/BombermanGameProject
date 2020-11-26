@@ -13,9 +13,19 @@ import static uet.oop.bomberman.entities.BombItem.*;
 
 public class Bomber extends Entity {
 
+    public static int bombCountWillBePlaced = 0;
     public int isMoving;
     protected final int timeTransfer = 26;
-    protected int velocity = 2;
+    protected static int velocity = 1;
+
+    public static int getVelocity() {
+        return velocity;
+    }
+
+    public static void setVelocity(int velocity) {
+        Bomber.velocity = velocity;
+    }
+
     protected int powerSpeed = 3;
     protected int count = 1;
     protected boolean movedOutBomb = true;
@@ -60,6 +70,7 @@ public class Bomber extends Entity {
                 setImg(Sprite.movingSprite(Sprite.player_dead1,Sprite.player_dead2,Sprite.player_dead3,animate,timeTransfer).getFxImage());
             }
             else {
+
                 setImg(null);
             }
         }
@@ -173,7 +184,7 @@ public class Bomber extends Entity {
     }
 
     public void placeBomb() {
-        if (space && bomb_count < 1 && bombQty > 0) {
+        if (space && bomb_count < 1 && bombCountWillBePlaced < bombQty) {
 
             Entity object = null;
             bomb_count++;
@@ -188,7 +199,7 @@ public class Bomber extends Entity {
                bomb_items.get(bomb_items.indexOf(object)).setImg(null);
                //bomb_items.remove(object);
             }*/
-            bombQty--;
+            bombCountWillBePlaced++;
             checkTemp = false;
         }
         if (space == false) bomb_count = 0;

@@ -99,6 +99,9 @@ public abstract class Entity {
                 return e;
             }
         }
+        if(bomberman.getX() == x && bomberman.getY() == y) {
+            return bomberman;
+        }
         return null;
     }
 

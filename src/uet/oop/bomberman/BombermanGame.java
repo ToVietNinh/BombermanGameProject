@@ -12,8 +12,11 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import uet.oop.bomberman.entities.*;
+import uet.oop.bomberman.entities.Item.AddBombItem;
+import uet.oop.bomberman.entities.Item.FlameItem;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.entities.BombItem.*;
+import uet.oop.bomberman.entities.Brick.*;
 
 import java.io.*;
 import java.util.*;
@@ -33,6 +36,10 @@ public class BombermanGame extends Application {
     public static List<Entity> ballooms = new ArrayList<>();
     public static List<Entity> oneals = new ArrayList<>();
     public static List<Entity> bomb_items = new ArrayList<>();
+    public static List<Entity> speed_items = new ArrayList<>();
+    public static List<Entity> flame_items = new ArrayList<>();
+    public static List<Entity> addBomb_items = new ArrayList<>();
+
     public static Entity bomberman;
     public static Entity bombItem;
     public static boolean goUp, goDown, goLeft, goRight, space, isMoving, shift, alt;
@@ -187,6 +194,14 @@ public class BombermanGame extends Application {
                     walls.add(object);
                 } else if (contentFileLever1[i][j] == '*') {
                     object = new Brick(j, i, Sprite.brick.getFxImage());
+                    // addBombItem : (2,7)
+                    if((i==2 && j==7 )||( i==1 && j==10) || (i==7 && j==14) || (i==1 && j==7) ){
+                        ((Brick) object).setHasItemAddBomb(true);
+                    }
+                    else if((i==2 && j==13 )||( i==2 && j==23) || (i==11 && j==16) ){
+                        ((Brick) object).setHasFlameItem(true);
+
+                    }
                     bricks.add(object);
                 } else if (contentFileLever1[i][j] == '1') {
                     object = new Balloom(j, i, Sprite.balloom_right1.getFxImage());
@@ -196,6 +211,10 @@ public class BombermanGame extends Application {
                     oneals.add(object);
                 }
 
+            }
+        }
+        for(int i=0; i<bricks.size(); i++) {
+            if(i%2 == 0) {
             }
         }
 
@@ -209,6 +228,20 @@ public class BombermanGame extends Application {
         ballooms.forEach(Entity::update);
         oneals.forEach(Entity::update);
         bomb_items.forEach(Entity::update);
+        bricks.forEach(Entity::update);
+        addBomb_items.forEach(Entity::update);
+        flame_items.forEach(Entity::update);
+
+        for(Entity e : bricks) {
+            if(((Brick) e).isDestroyed() && ((Brick) e).isHasItemAddBomb() && ((Brick) e).isCheckItemApear()) {
+                addBomb_items.add(new AddBombItem(e.getXUnit(),e.getYUnit(),Sprite.powerup_bombs.getFxImage()));
+            }
+            else if(((Brick) e).isDestroyed() && ((Brick) e).isHasFlameItem() && ((Brick) e).isCheckItemApear()){
+                flame_items.add(new FlameItem(e.getXUnit(),e.getYUnit(),Sprite.powerup_flames.getFxImage()));
+            }
+        }
+
+
 
         removeEntityDisappeared();
     }
@@ -224,6 +257,10 @@ public class BombermanGame extends Application {
         oneals.forEach(g -> g.render(gc));
         bricks.forEach(g -> g.render(gc));
         walls.forEach(g -> g.render(gc));
+        addBomb_items.forEach(g -> g.render(gc));
+        flame_items.forEach(g -> g.render(gc));
+//        flame_items.forEach(g -> g.render(gc));
+//        speed_items.forEach(g -> g.render(gc));
         //bomb_items.forEach(g -> g.render(gc));
 
         for(Entity e : bomb_items) {
@@ -268,6 +305,20 @@ public class BombermanGame extends Application {
         }
         if(bomberman.getImg()==null) {
 
+        }
+
+        for(Entity e : bricks) {
+            if(e.getImg() == null) {
+                bricks.remove(e);
+                break;
+            }
+        }
+
+        for(Entity e : addBomb_items) {
+            if(e.getImg() == null) {
+                addBomb_items.remove(e);
+                break;
+            }
         }
     }
 

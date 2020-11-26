@@ -10,15 +10,34 @@ import uet.oop.bomberman.BombermanGame;
 import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.entities.Flame;
 import uet.oop.bomberman.graphics.Sprite;
+import static uet.oop.bomberman.entities.Bomber.*;
+
 
 public class BombItem extends Entity {
     private int timeBeforeExplore = 130;
     private int timeFlame = 15;
     private int timeTransfer = 40;
     public boolean explored;
-    private int flameLen = 2;
+    protected static int flameLen = 1;
     protected static int bomb_count = 0;
-    protected static int bombQty = 10;
+
+    public static int getFlameLen() {
+        return flameLen;
+    }
+
+    public static void setFlameLen(int flameLen) {
+        BombItem.flameLen = flameLen;
+    }
+
+    protected static int bombQty = 1;
+
+    public static int getBombQty() {
+        return bombQty;
+    }
+
+    public static void setBombQty(int bombQty) {
+        BombItem.bombQty = bombQty;
+    }
 
     public void setFlameList(List<Flame> flameList) {
         BombItem.flameList = flameList;
@@ -44,6 +63,7 @@ public class BombItem extends Entity {
             }
         } else {
             if (timeFlame-- == 0) {
+                bombCountWillBePlaced--;
                 setImg(null);
                 //flameList.clear();
                 for(Entity e : flameList ) {
@@ -51,6 +71,7 @@ public class BombItem extends Entity {
                 }
             }
         }
+
     }
 
     private void explosion() {//init FlameList
@@ -141,7 +162,8 @@ public class BombItem extends Entity {
 
     public boolean canPassThrough(Entity e) { // return false if ko truyen qua dc e, true if truyen qua dc
         if (e instanceof Brick) {
-            //((Brick) e).setDestroyed(true);
+            ((Brick) e).setDestroyed(true);
+
             return false;
         }
         if (e instanceof Wall || e instanceof Portal) {
