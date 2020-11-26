@@ -14,6 +14,7 @@ import javafx.stage.Stage;
 import uet.oop.bomberman.entities.*;
 import uet.oop.bomberman.entities.Item.AddBombItem;
 import uet.oop.bomberman.entities.Item.FlameItem;
+import uet.oop.bomberman.entities.Item.SpeedItem;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.entities.BombItem.*;
 import uet.oop.bomberman.entities.Brick.*;
@@ -200,7 +201,9 @@ public class BombermanGame extends Application {
                     }
                     else if((i==2 && j==13 )||( i==2 && j==23) || (i==11 && j==16) ){
                         ((Brick) object).setHasFlameItem(true);
-
+                    }
+                    else if((i==7 && j ==1) || (i==7 && j==4) || (i==11 && j==19)) {
+                        ((Brick) object).setHasSpeedItem(true);
                     }
                     bricks.add(object);
                 } else if (contentFileLever1[i][j] == '1') {
@@ -231,6 +234,7 @@ public class BombermanGame extends Application {
         bricks.forEach(Entity::update);
         addBomb_items.forEach(Entity::update);
         flame_items.forEach(Entity::update);
+        speed_items.forEach(Entity::update);
 
         for(Entity e : bricks) {
             if(((Brick) e).isDestroyed() && ((Brick) e).isHasItemAddBomb() && ((Brick) e).isCheckItemApear()) {
@@ -238,6 +242,9 @@ public class BombermanGame extends Application {
             }
             else if(((Brick) e).isDestroyed() && ((Brick) e).isHasFlameItem() && ((Brick) e).isCheckItemApear()){
                 flame_items.add(new FlameItem(e.getXUnit(),e.getYUnit(),Sprite.powerup_flames.getFxImage()));
+            }
+            else if(((Brick) e).isDestroyed() && ((Brick) e).isHasSpeedItem() && ((Brick) e).isCheckItemApear()){
+                speed_items.add(new SpeedItem(e.getXUnit(),e.getYUnit(),Sprite.powerup_speed.getFxImage()));
             }
         }
 
@@ -259,6 +266,7 @@ public class BombermanGame extends Application {
         walls.forEach(g -> g.render(gc));
         addBomb_items.forEach(g -> g.render(gc));
         flame_items.forEach(g -> g.render(gc));
+        speed_items.forEach(g -> g.render(gc));
 //        flame_items.forEach(g -> g.render(gc));
 //        speed_items.forEach(g -> g.render(gc));
         //bomb_items.forEach(g -> g.render(gc));

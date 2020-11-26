@@ -10,6 +10,7 @@ public class Brick extends Entity {
         super(x, y, img);
     }
 
+    //Addbomb item
     protected boolean hasItemAddBomb;
 
     public boolean isHasItemAddBomb() {
@@ -20,6 +21,7 @@ public class Brick extends Entity {
         this.hasItemAddBomb= hasItemAddBomb;
     }
 
+    //Flame item
     protected boolean hasFlameItem;
 
     public boolean isHasFlameItem() {
@@ -28,6 +30,17 @@ public class Brick extends Entity {
 
     public void setHasFlameItem(boolean hasFlameItem) {
         this.hasFlameItem = hasFlameItem;
+    }
+
+    //Speed item
+    protected boolean isHasSpeedItem;
+
+    public boolean isHasSpeedItem() {
+        return isHasSpeedItem;
+    }
+
+    public void setHasSpeedItem(boolean hasSpeedItem) {
+        isHasSpeedItem = hasSpeedItem;
     }
 
     private boolean destroyed;
