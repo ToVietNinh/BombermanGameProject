@@ -5,6 +5,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
+import uet.oop.bomberman.BombermanGame;
 import uet.oop.bomberman.entities.Item.Portal;
 import uet.oop.bomberman.graphics.Sprite;
 
@@ -79,14 +80,15 @@ public class Bomber extends Entity {
             }
             else {
                 setImg(null);
-                if(timeToAppear-- <= 0){
-                   setX(1);
-                   setY(1);
-                   setImg(Sprite.player_right.getFxImage());
-                }
                 numLiver--;
                 if(numLiver<=0) {
-                    checkGameOver = true;
+                   checkGameOver = true;
+                }
+                try {
+                    BombermanGame.resetForNewLevel();
+                    BombermanGame.createMap(mapLevel[Portal.nowLevel-1]);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
 
             }

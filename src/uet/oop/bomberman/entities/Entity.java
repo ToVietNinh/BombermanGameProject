@@ -74,6 +74,7 @@ public abstract class Entity {
 
 
     public static Entity getEntityInCoordination(int x, int y){
+
         for(Entity e : walls) {
             if(e.getXUnit() == x && e.getYUnit() == y){
                 return e;
@@ -104,13 +105,15 @@ public abstract class Entity {
                 return e;
             }
         }
+
+        if(bomberman.getXUnit() == x && bomberman.getYUnit() == y) {
+            return bomberman;
+        }
+
         for(Entity e : bomb_items) {
             if(e.getXUnit() == x && e.getYUnit() == y) {
                 return e;
             }
-        }
-        if(bomberman.getXUnit() == x && bomberman.getYUnit() == y) {
-            return bomberman;
         }
         if(portal != null) {
             if (portal.getXUnit() == x && portal.getYUnit() == y) {

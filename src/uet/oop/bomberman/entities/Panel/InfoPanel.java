@@ -4,6 +4,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import uet.oop.bomberman.entities.Bomber;
+import uet.oop.bomberman.entities.Item.Portal;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -21,7 +22,7 @@ public class InfoPanel {
         gc.setFill(Color.WHITE);
         gc.setFont(new Font("", 15));
         gc.fillText("Time: " + timeRemain, 0,440);
-        gc.fillText("Level: " + nowLevel, 200,440);
+        gc.fillText("Level: " + Portal.nowLevel, 200,440);
         gc.fillText("Live: " +  Bomber.numLiver, 400, 440);
         gc.fillText("Score: " + nowScore, 600, 440);
     }

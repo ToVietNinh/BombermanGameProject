@@ -31,10 +31,10 @@ import java.util.*;
 
 
 public class BombermanGame extends Application {
-    String level1 = "res/levels/mapLevel1.txt";
-    String level2 = "res/levels/mapLevel2.txt";
-    String level3 = "res/levels/mapLevel3.txt";
-    String[] mapLevel = {level1, level2, level3};
+    static String level1 = "res/levels/mapLevel1.txt";
+    static String level2 = "res/levels/mapLevel2.txt";
+    static String level3 = "res/levels/mapLevel3.txt";
+    public static String[] mapLevel = {level1, level2, level3};
 
     protected boolean checkToNext;
     protected boolean checkToPassLevel2;
@@ -59,11 +59,11 @@ public class BombermanGame extends Application {
     public static Entity bomberman;
     public static Entity bombItem;
     public static Entity portal = null;
-    protected boolean checkToPlacePortal = true;
+    protected static boolean checkToPlacePortal = true;
     public static boolean goUp, goDown, goLeft, goRight, space, isMoving, shift, alt;
     public static int positionX, positionY;
     public static boolean checkPlaceMore, checkTemp;
-    public char[][] contentFileLever1 = new char[14][31];
+    public static char[][] contentFileLever1 = new char[14][31];
     protected int count = 1;
     //protected int timeToExit = 60;
 
@@ -101,7 +101,7 @@ public class BombermanGame extends Application {
 
         // Tao scene
         Scene scene = new Scene(root);
-        scene.setFill(Color.rgb(80,160,0));
+        scene.setFill(Color.rgb(80, 160, 0));
 
         scene.setOnKeyPressed(
                 new EventHandler<KeyEvent>() {
@@ -192,13 +192,13 @@ public class BombermanGame extends Application {
         AnimationTimer timer = new AnimationTimer() {
             @Override
             public void handle(long l) {
-                if(showMenu){
+                if (showMenu) {
                     menuGame.showMenuGame(gc);
                     menuGame.update();
 
-                    if(menuGame.isQuit()){
+                    if (menuGame.isQuit()) {
                         stage.close();
-                    }else if(menuGame.isStartGame()){
+                    } else if (menuGame.isStartGame()) {
                         mute = menuGame.isMute();
                         menuGame.setStartGame(false);
                         showMenu = false;
@@ -254,9 +254,9 @@ public class BombermanGame extends Application {
             e.printStackTrace();
         }
 
-        bomberman = new Bomber(1, 1, Sprite.player_right.getFxImage());
-        positionX = bomberman.getX();
-        positionY = bomberman.getY();
+//        bomberman = new Bomber(1, 1, Sprite.player_right.getFxImage());
+//        positionX = bomberman.getX();
+//        positionY = bomberman.getY();
 
         //bombItem = new BombItem(1,3,Sprite.bomb.getFxImage());
         //bomb_items.add(new BombItem(3,2,Sprite.bomb.getFxImage()));
@@ -266,16 +266,20 @@ public class BombermanGame extends Application {
     }
 
     //FileInputStream fileInputStream = new FileInputStream("mapLevel1.txt");
-    public void createMap(String path) throws Exception {
+    public static void createMap(String path) throws Exception {
         FileReader fr = new FileReader(path);
         BufferedReader br = new BufferedReader(fr);
-        for (int i = 0; i < HEIGHT-1; i++) {
+        for (int i = 0; i < HEIGHT - 1; i++) {
             String line = br.readLine();
             for (int j = 0; j < WIDTH; j++) {
                 contentFileLever1[i][j] = line.charAt(j);
 
             }
         }
+        bomberman = new Bomber(1, 1, Sprite.player_right.getFxImage());
+        positionX = bomberman.getX();
+        positionY = bomberman.getY();
+
         for (int i = 0; i < HEIGHT; i++) {
             for (int j = 0; j < WIDTH; j++) {
                 Entity object = null;
@@ -289,10 +293,10 @@ public class BombermanGame extends Application {
                         ((Brick) object).setHasItemAddBomb(true);
                     } else if ((i == 2 && j == 13) || (i == 2 && j == 23) || (i == 11 && j == 16)) {
                         ((Brick) object).setHasFlameItem(true);
-                    } else if ((i == 7 && j == 1) || (i == 7 && j == 4) ||  (i == 1 && j == 7)) {
+                    } else if ((i == 7 && j == 1) || (i == 7 && j == 4) || (i == 1 && j == 7)) {
                         ((Brick) object).setHasSpeedItem(true);
                     } else if (i == 5 && j == 14) {
-                        if(checkToPlacePortal) {
+                        if (checkToPlacePortal) {
                             ((Brick) object).setHasPortal(true);
                         }
                     }
@@ -304,7 +308,7 @@ public class BombermanGame extends Application {
                     object = new Oneal(j, i, Sprite.oneal_right1.getFxImage());
                     oneals.add(object);
                 } else if (contentFileLever1[i][j] == '3') {
-                    object = new Doll(j,i, Sprite.doll_right1.getFxImage());
+                    object = new Doll(j, i, Sprite.doll_right1.getFxImage());
                     dolls.add(object);
                 } else if (contentFileLever1[i][j] == '4') {
                     object = new Kondoria(j, i, Sprite.kondoria_right1.getFxImage());
@@ -396,13 +400,13 @@ public class BombermanGame extends Application {
     }
 
     public void removeEntityDisappeared() {
-//        for (Entity e : bomb_items) {
-//            if (e.getImg() == null) {
-//                bomb_items.remove(e);
-//                break;
-//
-//            }
-//        }
+        for (Entity e : bomb_items) {
+            if (e.getImg() == null) {
+                bomb_items.remove(e);
+                break;
+
+            }
+        }
 
         for (Entity e : ballooms) {
             if (e.getImg() == null) {
@@ -419,15 +423,15 @@ public class BombermanGame extends Application {
             }
         }
 
-        for(Entity e : dolls) {
-            if(e.getImg() == null) {
+        for (Entity e : dolls) {
+            if (e.getImg() == null) {
                 dolls.remove(e);
                 break;
             }
         }
 
-        for(Entity e : kondorias) {
-            if(e.getImg() == null) {
+        for (Entity e : kondorias) {
+            if (e.getImg() == null) {
                 kondorias.remove(e);
                 break;
             }
@@ -459,7 +463,7 @@ public class BombermanGame extends Application {
 
     }
 
-    public void resetForNewLevel() {
+    public static void resetForNewLevel() {
         ballooms.clear();
         oneals.clear();
         kondorias.clear();
@@ -469,10 +473,12 @@ public class BombermanGame extends Application {
         flame_items.clear();
         speed_items.clear();
         bomb_items.clear();
+        portal = null;
 
         BombItem.setBombQty(1);
         BombItem.setFlameLen(1);
         Bomber.setVelocity(2);
+        Bomber.bombCountWillBePlaced = 0;
 
         bomberman = new Bomber(1, 1, Sprite.player_right.getFxImage());
         positionX = bomberman.getX();
@@ -480,8 +486,9 @@ public class BombermanGame extends Application {
     }
 
     Media sound;
+
     @SuppressWarnings("deprecation")
-    public void setSound()  {
+    public void setSound() {
 
         try {
             sound = new Media(new File("res/textures/sound.mp3").toURL().toString());
@@ -491,7 +498,6 @@ public class BombermanGame extends Application {
         MediaPlayer mediaPlayer = new MediaPlayer(sound);
         mediaPlayer.play();
     }
-
 
 
 }
