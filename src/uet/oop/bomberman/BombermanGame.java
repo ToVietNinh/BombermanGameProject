@@ -12,6 +12,7 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import uet.oop.bomberman.entities.Enemy.Balloom;
 import uet.oop.bomberman.entities.Enemy.Doll;
 import uet.oop.bomberman.entities.Enemy.Kondoria;
@@ -22,11 +23,14 @@ import uet.oop.bomberman.entities.Item.FlameItem;
 import uet.oop.bomberman.entities.Item.Portal;
 import uet.oop.bomberman.entities.Item.SpeedItem;
 import uet.oop.bomberman.entities.Panel.MenuGame;
+import uet.oop.bomberman.entities.Panel.ShowPanel;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.entities.Panel.InfoPanel;
 
+import javax.sound.sampled.Line;
 import java.io.*;
 import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.*;
 
 
@@ -66,6 +70,7 @@ public class BombermanGame extends Application {
     public static char[][] contentFileLever1 = new char[14][31];
     protected int count = 1;
     //protected int timeToExit = 60;
+    protected int timeToTransferNewLevel = 120;
 
     public boolean showMenu = true;
     public boolean mute = false;
@@ -207,8 +212,9 @@ public class BombermanGame extends Application {
                     update();
                     renderEntities();
                     InfoPanel.showInfoPanel(gc);
-                    if (Bomber.checkGameOver) {
+                    if (Bomber.checkGameOver || InfoPanel.timeRemain <=0) {
                         this.stop();
+                        ShowPanel.renderGameOverScreen(gc);
                     }
                     if (checkToNext && tempToNextOneTime < 1) {
                         resetForNewLevel();
@@ -402,7 +408,9 @@ public class BombermanGame extends Application {
     public void removeEntityDisappeared() {
         for (Entity e : bomb_items) {
             if (e.getImg() == null) {
-                bomb_items.remove(e);
+                if(BombItem.checkTimeToSetNull-- <=0) {
+                    bomb_items.remove(e);
+                }
                 break;
 
             }
@@ -467,6 +475,7 @@ public class BombermanGame extends Application {
         ballooms.clear();
         oneals.clear();
         kondorias.clear();
+        dolls.clear();
         walls.clear();
         bricks.clear();
         addBomb_items.clear();
@@ -485,19 +494,30 @@ public class BombermanGame extends Application {
         positionY = bomberman.getY();
     }
 
-    Media sound;
+    static Media sound;
 
     @SuppressWarnings("deprecation")
-    public void setSound() {
+    public static void setSound() {
 
-        try {
-            sound = new Media(new File("res/textures/sound.mp3").toURL().toString());
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-        MediaPlayer mediaPlayer = new MediaPlayer(sound);
+//        try {
+//            sound = new Media(new File("res/textures/sound.mp3").toURL().toString());
+//        } catch (MalformedURLException e) {
+//            e.printStackTrace();
+//        }
+//        MediaPlayer mediaPlayer = new MediaPlayer(sound);
+//        mediaPlayer.play();
+        URL url = BombermanGame.class.getResource("res/textures/sound.mp3");
+        Media media = new Media(String.valueOf(url));
+        MediaPlayer mediaPlayer = new MediaPlayer(media);
+        mediaPlayer.setOnEndOfMedia(new Runnable() {
+            @Override
+            public void run() {
+                mediaPlayer.seek(Duration.ZERO);
+            }
+        });
         mediaPlayer.play();
     }
+
 
 
 }

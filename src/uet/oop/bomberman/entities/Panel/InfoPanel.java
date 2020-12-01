@@ -10,10 +10,10 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class InfoPanel {
-    protected static int timeRemain = 150;
+    public static int timeRemain = 150;
     protected static int nowLevel = 1;
     protected static int liveRemain = 3;
-    protected static int nowScore = 0;
+    public static int nowScore = 0;
     protected static int delay = 1500;
     protected static int period = 1000;
     public static void showInfoPanel(GraphicsContext gc) {

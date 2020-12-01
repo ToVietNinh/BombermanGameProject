@@ -10,6 +10,7 @@ import uet.oop.bomberman.entities.Enemy.Doll;
 import uet.oop.bomberman.entities.Enemy.Kondoria;
 import uet.oop.bomberman.entities.Enemy.Oneal;
 import uet.oop.bomberman.entities.Item.Portal;
+import uet.oop.bomberman.entities.Panel.InfoPanel;
 import uet.oop.bomberman.graphics.Sprite;
 import static uet.oop.bomberman.entities.Bomber.*;
 
@@ -21,6 +22,8 @@ public class BombItem extends Entity {
     public boolean explored;
     protected static int flameLen = 1;
     protected static int bomb_count = 0;
+
+    public static int checkTimeToSetNull = 100;
 
     public static int getFlameLen() {
         return flameLen;
@@ -172,18 +175,22 @@ public class BombItem extends Entity {
         }
         if (e instanceof Balloom) {
             ((Balloom) e).setCheckDied(true);
+            InfoPanel.nowScore += 20;
         }
 
         if(e instanceof Oneal) {
             ((Oneal) e).setCheckDied(true);
+            InfoPanel.nowScore += 50;
         }
 
         if(e instanceof Doll) {
             ((Doll) e).setCheckDied(true);
+            InfoPanel.nowScore += 80;
         }
 
         if(e instanceof Kondoria) {
             ((Kondoria)e).setCheckDied(true);
+            InfoPanel.nowScore += 100;
         }
 
         if (e instanceof Bomber) {
