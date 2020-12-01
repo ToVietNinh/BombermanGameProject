@@ -43,6 +43,17 @@ public class Brick extends Entity {
         isHasSpeedItem = hasSpeedItem;
     }
 
+    //Portal
+    protected boolean isHasPortal;
+
+    public boolean isHasPortal() {
+        return isHasPortal;
+    }
+
+    public void setHasPortal(boolean hasPortal) {
+        isHasPortal = hasPortal;
+    }
+
     private boolean destroyed;
 
     public boolean isDestroyed() {

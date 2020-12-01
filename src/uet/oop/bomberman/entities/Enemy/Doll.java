@@ -1,19 +1,20 @@
-package uet.oop.bomberman.entities;
+package uet.oop.bomberman.entities.Enemy;
 
 import javafx.scene.image.Image;
+import uet.oop.bomberman.entities.BombItem;
+import uet.oop.bomberman.entities.Brick;
+import uet.oop.bomberman.entities.Entity;
+import uet.oop.bomberman.entities.Wall;
 import uet.oop.bomberman.graphics.Sprite;
 
 import java.util.Random;
 
-import static uet.oop.bomberman.BombermanGame.positionX;
-import static uet.oop.bomberman.BombermanGame.positionY;
+public class Doll extends Entity {
 
-public class Oneal extends Entity {
+    public int checkPosOfDollX[] = {1, Sprite.SCALED_SIZE - 1, 1, Sprite.SCALED_SIZE - 1};
+    public int checkPosOfDollY[] = {1, 1, Sprite.SCALED_SIZE - 1, Sprite.SCALED_SIZE - 1};
 
-    public int checkPosOfOnealX[] = {1, Sprite.SCALED_SIZE - 1, 1, Sprite.SCALED_SIZE - 1};
-    public int checkPosOfOnealY[] = {1, 1, Sprite.SCALED_SIZE - 1, Sprite.SCALED_SIZE - 1};
-
-    public Oneal(int x, int y, Image img) {
+    public Doll(int x, int y, Image img) {
         super(x, y, img);
     }
 
@@ -31,15 +32,15 @@ public class Oneal extends Entity {
 
     protected int switchMove=0;
 
-    public final int velocityOfOneal = 3;
+    public final int velocityOfDoll = 3;
 
-    private int timeTransferOfOneal = 60;
+    private int timeTransferOfDoll = 60;
 
     protected int tempX = this.getX(), tempY = this.getY();
 
     protected int direction;
 
-    private int timeToDisappearOneal = 80;
+    private int timeToDisappearDoll= 80;
 
     public int getDirection() {
         return direction;
@@ -56,8 +57,8 @@ public class Oneal extends Entity {
             move();
         }
         else {
-            if(timeToDisappearOneal-- >0) {
-                setImg(Sprite.oneal_dead.getFxImage());
+            if(timeToDisappearDoll-- >0) {
+                setImg(Sprite.doll_dead.getFxImage());
             }
             else {
                 setImg(null);
@@ -73,9 +74,9 @@ public class Oneal extends Entity {
             case 0:
             {
                 switchMove++;
-                tempX += velocityOfOneal;
-                if(checkCollisionOfOneal()){
-                    tempX -= velocityOfOneal;
+                tempX += velocityOfDoll;
+                if(checkCollisionOfDoll()){
+                    tempX -= velocityOfDoll;
                     Random random = new Random();
                     setDirection(random.nextInt(4));
                 }
@@ -84,14 +85,14 @@ public class Oneal extends Entity {
                     setDirection(random.nextInt(4));
                 }
                 setX(tempX);
-                setImg(Sprite.movingSprite(Sprite.oneal_right1, Sprite.oneal_right2, Sprite.oneal_right3, animate, timeTransferOfOneal).getFxImage());
+                setImg(Sprite.movingSprite(Sprite.doll_right1, Sprite.doll_right2, Sprite.doll_right3, animate, timeTransferOfDoll).getFxImage());
                 break;
             }
             case 1:
                 switchMove++;
-                tempX -= velocityOfOneal;
-                if(checkCollisionOfOneal() ){
-                    tempX += velocityOfOneal;
+                tempX -= velocityOfDoll;
+                if(checkCollisionOfDoll() ){
+                    tempX += velocityOfDoll;
                     Random random = new Random();
                     setDirection(random.nextInt(4));
                 }
@@ -100,14 +101,14 @@ public class Oneal extends Entity {
                     setDirection(random.nextInt(4));
                 }
                 setX(tempX);
-                setImg(Sprite.movingSprite(Sprite.oneal_left1, Sprite.oneal_left2, Sprite.oneal_left3, animate, timeTransferOfOneal).getFxImage());
+                setImg(Sprite.movingSprite(Sprite.doll_left1, Sprite.doll_left2, Sprite.doll_left2, animate, timeTransferOfDoll).getFxImage());
 
                 break;
             case 2:
                 switchMove++;
-                tempY -= velocityOfOneal;
-                if(checkCollisionOfOneal() ){
-                    tempY += velocityOfOneal;
+                tempY -= velocityOfDoll;
+                if(checkCollisionOfDoll() ){
+                    tempY += velocityOfDoll;
                     Random random = new Random();
                     setDirection(random.nextInt(4));
                 }
@@ -119,29 +120,29 @@ public class Oneal extends Entity {
                 break;
             case 3:
                 switchMove++;
-                tempY += velocityOfOneal;
+                tempY += velocityOfDoll;
 
-                if(checkCollisionOfOneal()){
-                    tempY -= velocityOfOneal;
+                if(checkCollisionOfDoll()){
+                    tempY -= velocityOfDoll;
                     Random random = new Random();
                     setDirection(random.nextInt(4));
                 }
                 if(switchMove > pointToSwitch){
-                Random random = new Random();
-                setDirection(random.nextInt(4));
-            }
+                    Random random = new Random();
+                    setDirection(random.nextInt(4));
+                }
                 setY(tempY);
                 break;
         }
 
     }
 
-    public boolean checkCollisionOfOneal() {
+    public boolean checkCollisionOfDoll() {
         //check with wall
         for (int i = 0; i < 4; i++) {
-            int checkOfOnealX = (tempX + checkPosOfOnealX[i]) / Sprite.SCALED_SIZE;
-            int checkOfOnealY = (tempY + checkPosOfOnealY[i]) / Sprite.SCALED_SIZE;
-            Entity e = getEntityInCoordination(checkOfOnealX, checkOfOnealY);
+            int checkOfDollX = (tempX + checkPosOfDollX[i]) / Sprite.SCALED_SIZE;
+            int checkOfDollY = (tempY + checkPosOfDollY[i]) / Sprite.SCALED_SIZE;
+            Entity e = getEntityInCoordination(checkOfDollX, checkOfDollY);
             if (e instanceof Wall || e instanceof Brick || e instanceof BombItem) {
                 return true;
             }

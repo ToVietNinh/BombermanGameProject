@@ -94,13 +94,28 @@ public abstract class Entity {
                 return e;
             }
         }
+        for(Entity e : dolls) {
+            if(e.getXUnit() == x && e.getYUnit() == y) {
+                return e;
+            }
+        }
+        for(Entity e : kondorias) {
+            if(e.getXUnit() == x && e.getYUnit() == y) {
+                return e;
+            }
+        }
         for(Entity e : bomb_items) {
             if(e.getXUnit() == x && e.getYUnit() == y) {
                 return e;
             }
         }
-        if(bomberman.getX() == x && bomberman.getY() == y) {
+        if(bomberman.getXUnit() == x && bomberman.getYUnit() == y) {
             return bomberman;
+        }
+        if(portal != null) {
+            if (portal.getXUnit() == x && portal.getYUnit() == y) {
+                return portal;
+            }
         }
         return null;
     }

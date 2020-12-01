@@ -29,6 +29,7 @@ public class AddBombItem extends Entity {
             count++;
             System.out.println(count);
             BombItem.setBombQty(BombItem.getBombQty() + 1);
+
         }
     }
 }

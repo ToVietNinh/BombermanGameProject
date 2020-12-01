@@ -5,6 +5,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
+import uet.oop.bomberman.entities.Item.Portal;
 import uet.oop.bomberman.graphics.Sprite;
 
 import static uet.oop.bomberman.BombermanGame.*;
@@ -16,7 +17,7 @@ public class Bomber extends Entity {
     public static int bombCountWillBePlaced = 0;
     public int isMoving;
     protected final int timeTransfer = 26;
-    protected static int velocity = 1;
+    protected static int velocity = 2;
 
     public static int getVelocity() {
         return velocity;
@@ -32,8 +33,11 @@ public class Bomber extends Entity {
     protected int spaceToMoveOut = 32;
     protected int timeToDisappear = 200;
     public boolean checkLeft, checkRight, checkUp, checkDown;
+    public static boolean checkGameOver;
 
     protected boolean checkDied;
+    public static int numLiver = 3;
+    protected int timeToAppear = 80;
 
     public boolean isCheckDied() {
         return checkDied;
@@ -63,6 +67,10 @@ public class Bomber extends Entity {
                 positionY = bomberman.getY();
                 bomberman.setImg(Sprite.player_right.getFxImage());
             }*/
+            if(checkCollisionWithEnemy()) {
+                setCheckDied(true);
+            }
+
             placeBomb();
         } else {
             if(timeToDisappear-- >0) {
@@ -70,8 +78,17 @@ public class Bomber extends Entity {
                 setImg(Sprite.movingSprite(Sprite.player_dead1,Sprite.player_dead2,Sprite.player_dead3,animate,timeTransfer).getFxImage());
             }
             else {
-
                 setImg(null);
+                if(timeToAppear-- <= 0){
+                   setX(1);
+                   setY(1);
+                   setImg(Sprite.player_right.getFxImage());
+                }
+                numLiver--;
+                if(numLiver<=0) {
+                    checkGameOver = true;
+                }
+
             }
         }
     }
@@ -142,6 +159,12 @@ public class Bomber extends Entity {
                 return true;
             }
 
+            if(e instanceof Portal) {
+                if(Portal.checkGoToNext()) {
+                    return false;
+                }
+                return true;
+            }
 
             /* (e instanceof BombItem ) {
                 return true;
@@ -205,5 +228,34 @@ public class Bomber extends Entity {
         if (space == false) bomb_count = 0;
 
     }
+
+    public boolean checkCollisionWithEnemy() {
+        for(Entity e : ballooms) {
+            if(e.getXUnit() == getXUnit() && e.getYUnit() == getYUnit()) {
+                return true;
+            }
+        }
+
+        for(Entity e : oneals) {
+            if(e.getXUnit() == getXUnit() && e.getYUnit() == getYUnit()) {
+                return true;
+            }
+        }
+
+        for(Entity e : dolls) {
+            if(e.getXUnit() == getXUnit() && e.getYUnit() == getYUnit()) {
+                return true;
+            }
+        }
+
+        for(Entity e : kondorias) {
+            if(e.getXUnit() == getXUnit() && e.getYUnit() == getYUnit()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
 
 }

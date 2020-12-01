@@ -1,12 +1,13 @@
-package uet.oop.bomberman.entities;
+package uet.oop.bomberman.entities.Enemy;
 
 import javafx.scene.image.Image;
+import uet.oop.bomberman.entities.BombItem;
+import uet.oop.bomberman.entities.Brick;
+import uet.oop.bomberman.entities.Entity;
+import uet.oop.bomberman.entities.Wall;
 import uet.oop.bomberman.graphics.Sprite;
 
 import java.util.Random;
-
-import static uet.oop.bomberman.BombermanGame.positionX;
-import static uet.oop.bomberman.BombermanGame.positionY;
 
 public class Balloom extends Entity {
 

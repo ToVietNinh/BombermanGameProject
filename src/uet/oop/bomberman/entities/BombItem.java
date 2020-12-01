@@ -4,11 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javafx.scene.canvas.GraphicsContext;
-import static uet.oop.bomberman.BombermanGame.*;
 
-import uet.oop.bomberman.BombermanGame;
-import uet.oop.bomberman.entities.Entity;
-import uet.oop.bomberman.entities.Flame;
+import uet.oop.bomberman.entities.Enemy.Balloom;
+import uet.oop.bomberman.entities.Enemy.Doll;
+import uet.oop.bomberman.entities.Enemy.Kondoria;
+import uet.oop.bomberman.entities.Enemy.Oneal;
+import uet.oop.bomberman.entities.Item.Portal;
 import uet.oop.bomberman.graphics.Sprite;
 import static uet.oop.bomberman.entities.Bomber.*;
 
@@ -169,7 +170,7 @@ public class BombItem extends Entity {
         if (e instanceof Wall || e instanceof Portal) {
             return false;
         }
-        if (e instanceof Balloom ) {
+        if (e instanceof Balloom) {
             ((Balloom) e).setCheckDied(true);
         }
 
@@ -177,10 +178,18 @@ public class BombItem extends Entity {
             ((Oneal) e).setCheckDied(true);
         }
 
+        if(e instanceof Doll) {
+            ((Doll) e).setCheckDied(true);
+        }
+
+        if(e instanceof Kondoria) {
+            ((Kondoria)e).setCheckDied(true);
+        }
+
         if (e instanceof Bomber) {
-            System.out.println("aa");
             ((Bomber) e) .setCheckDied(true);
         }
+
         return true;
     }
 
